@@ -42,7 +42,7 @@ namespace Sanicball.UI
             var manager = FindObjectOfType<MatchManager>();
             if (manager)
             {
-                tempSettings.CopyValues(manager.CurrentSettings);
+                tempSettings.CopyValues(manager.CopyCurrentSettings());
             }
             UpdateUiFields();
         }
@@ -52,7 +52,7 @@ namespace Sanicball.UI
             var manager = FindObjectOfType<MatchManager>();
             if (manager)
             {
-                manager.CurrentSettings.CopyValues(tempSettings);
+                manager.ChangeCurrentSettings(tempSettings);
                 ActiveData.MatchSettings.CopyValues(tempSettings);
             }
         }

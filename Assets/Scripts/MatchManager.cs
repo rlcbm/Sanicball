@@ -18,7 +18,7 @@ namespace Sanicball
     /// <summary>
     /// Manages game state - scenes, players, all that jazz
     /// </summary>
-    public class MatchManager : MonoBehaviour
+    public class MatchManager : NetworkBehaviour
     {
         [SerializeField]
         private string lobbySceneName = "Lobby";
@@ -43,13 +43,29 @@ namespace Sanicball
 
         //Events
         public event EventHandler<MatchPlayerEventArgs> MatchPlayerAdded;
+
         public event EventHandler<MatchPlayerEventArgs> MatchPlayerRemoved;
+
+        public event EventHandler MatchSettingsChanged;
 
         /// <summary>
         /// Contains all players in the game, even ones from other clients in online races
         /// </summary>
         public List<MatchPlayer> Players { get; private set; }
-        public Data.MatchSettings CurrentSettings { get { return currentSettings; } }
+
+        public Data.MatchSettings CopyCurrentSettings()
+        {
+            Data.MatchSettings settingsCopy = new Data.MatchSettings();
+            settingsCopy.CopyValues(currentSettings);
+            return settingsCopy;
+        }
+
+        public void ChangeCurrentSettings(Data.MatchSettings newSettings)
+        {
+            currentSettings.CopyValues(newSettings);
+            if (MatchSettingsChanged != null)
+                MatchSettingsChanged.Invoke(this, EventArgs.Empty);
+        }
 
         public MatchPlayer CreatePlayer(string name, ControlType ctrlType, int characterId)
         {
@@ -136,7 +152,7 @@ namespace Sanicball
 
         public void GoToStage()
         {
-            var targetStage = Data.ActiveData.Stages[CurrentSettings.StageId];
+            var targetStage = Data.ActiveData.Stages[currentSettings.StageId];
 
             loadingStage = true;
             loadingLobby = false;
@@ -193,7 +209,7 @@ namespace Sanicball
         {
             inLobby = false;
             var raceManager = Instantiate(raceManagerPrefab);
-            raceManager.Settings.CopyValues(CurrentSettings);
+            raceManager.Settings.CopyValues(currentSettings);
         }
 
         public void QuitMatch()
@@ -275,6 +291,7 @@ namespace Sanicball
         }
 
         public event EventHandler LeftMatch;
+
         public event EventHandler ChangedReady;
 
         public string Name { get { return name; } }
