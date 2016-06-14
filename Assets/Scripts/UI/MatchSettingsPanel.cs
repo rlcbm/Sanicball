@@ -52,7 +52,7 @@ namespace Sanicball.UI
             var manager = FindObjectOfType<MatchManager>();
             if (manager)
             {
-                manager.RpcChangeCurrentSettings(Newtonsoft.Json.JsonConvert.SerializeObject(tempSettings));
+                manager.RpcChangeCurrentSettings(tempSettings.Serialize());
                 ActiveData.MatchSettings.CopyValues(tempSettings);
             }
         }

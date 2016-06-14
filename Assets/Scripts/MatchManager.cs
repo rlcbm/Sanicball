@@ -63,8 +63,7 @@ namespace Sanicball
         [ClientRpc]
         public void RpcChangeCurrentSettings(string newSettings)
         {
-            Data.MatchSettings s = Newtonsoft.Json.JsonConvert.DeserializeObject<Data.MatchSettings>(newSettings);
-            currentSettings.CopyValues(s);
+            currentSettings.Deserialize(newSettings);
             if (MatchSettingsChanged != null)
                 MatchSettingsChanged.Invoke(this, EventArgs.Empty);
         }

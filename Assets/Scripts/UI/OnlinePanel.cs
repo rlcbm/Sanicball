@@ -85,7 +85,7 @@ namespace Sanicball.UI
             {
                 var matchListItem = Instantiate(matchButtonPrefab);
                 matchListItem.transform.SetParent(targetServerListContainer, false);
-                matchListItem.SetData(match);
+                matchListItem.SetData(matchFinder, match);
                 latestMatches.Add(matchListItem);
             }
 

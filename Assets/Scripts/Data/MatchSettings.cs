@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Sanicball.Data
@@ -16,6 +17,11 @@ namespace Sanicball.Data
     {
         [Newtonsoft.Json.JsonProperty]
         private int[] aiCharacters = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+        public int StageId { get; set; }
+        public int Laps { get; set; }
+        public int AICount { get; set; }
+        public AISkillLevel AISkill { get; set; }
 
         public MatchSettings()
         {
@@ -34,10 +40,23 @@ namespace Sanicball.Data
             aiCharacters = (int[])original.aiCharacters.Clone();
         }
 
-        public int StageId { get; set; }
-        public int Laps { get; set; }
-        public int AICount { get; set; }
-        public AISkillLevel AISkill { get; set; }
+        /// <summary>
+        /// Serializes this MatchSettings object into JSON.
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+
+        /// <summary>
+        /// Deserializes the supplied string into a MatchSettings and copies its values into this object.
+        /// </summary>
+        /// <param name="data"></param>
+        public void Deserialize(string data)
+        {
+            CopyValues(JsonConvert.DeserializeObject<MatchSettings>(data));
+        }
 
         public int GetAICharacter(int pos)
         {
